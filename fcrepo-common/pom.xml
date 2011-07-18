@@ -214,8 +214,10 @@
             <configuration>
               <forceCreation>true</forceCreation>
               <excludes>
-                <exclude>**/FedoraAPIABindingSOAPHTTPImpl.class</exclude>
-                <exclude>**/FedoraAPIMBindingSOAPHTTPImpl.class</exclude>
+                <exclude>**/FedoraAPIABindingSOAPHTTPImpl.class
+                </exclude>
+                <exclude>**/FedoraAPIMBindingSOAPHTTPImpl.class
+                </exclude>
                 <exclude>**/FedoraAPIAServiceLocator.class</exclude>
                 <exclude>**/FedoraAPIMServiceLocator.class</exclude>
               </excludes>
@@ -279,33 +281,56 @@
             <configuration>
               <sourceRoot>
                 ${project.build.directory}/generated-sources/cxf
-							</sourceRoot>
+              </sourceRoot>
               <!--<defaultOptions> <noAddressBinding>true</noAddressBinding> 
                 </defaultOptions> -->
               <useCompileClasspath>true</useCompileClasspath>
               <wsdlOptions>
-                <!-- <wsdlOption> <wsdl>${basedir}/../resources/wsdl/Fedora-API-M.wsdl</wsdl> 
-                  <bindingFiles> <bindingFile>${basedir}/src/main/resources/wsdl/async_binding.xml</bindingFile> 
-                  </bindingFiles> </wsdlOption> -->
-
+                <!-- API-M -->
                 <wsdlOption>
-                  <wsdl>${basedir}/../resources/wsdl/Fedora-API-M.wsdl</wsdl>
-                  <extraargs>
-                    <!--<extraarg>-impl</extraarg><extraarg>-verbose</extraarg> -->
-                  </extraargs>
+                  <wsdl>${basedir}/../resources/wsdl/Fedora-API-M.wsdl
+                  </wsdl>
+                  <!--<extraargs>
+                    <extraarg>-impl</extraarg><extraarg>-verbose</extraarg><extraarg>-validate</extraarg>
+                  </extraargs>-->
                   <bindingFiles>
-                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAXWSbindings.xml</bindingFile>
-                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAXBbindings.xml</bindingFile>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-WS-API-M-Bindings.xml
+                    </bindingFile>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-B-Bindings.xml
+                    </bindingFile>
                   </bindingFiles>
                 </wsdlOption>
+                <!-- API-M MTOM -->
                 <wsdlOption>
-                  <wsdl>${basedir}/../resources/wsdl/Fedora-API-M-MTOM.wsdl</wsdl>
-                  <extraargs>
-                    <!--<extraarg>-impl</extraarg><extraarg>-verbose</extraarg> -->
-                  </extraargs>
+                  <wsdl>${basedir}/../resources/wsdl/Fedora-API-M-MTOM.wsdl
+                  </wsdl>
                   <bindingFiles>
-                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAXWSbindingsMTOM.xml</bindingFile>
-                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAXBbindingsMTOM.xml</bindingFile>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-WS-API-M-BindingsMTOM.xml
+                    </bindingFile>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-B-BindingsMTOM.xml
+                    </bindingFile>
+                  </bindingFiles>
+                </wsdlOption>
+                <!-- API-A -->
+                <wsdlOption>
+                  <wsdl>${basedir}/../resources/wsdl/Fedora-API-A.wsdl
+                  </wsdl>
+                  <bindingFiles>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-WS-API-A-Bindings.xml
+                    </bindingFile>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-B-Bindings.xml
+                    </bindingFile>
+                  </bindingFiles>
+                </wsdlOption>
+                <!-- API-A MTOM -->
+                <wsdlOption>
+                  <wsdl>${basedir}/../resources/wsdl/Fedora-API-A-MTOM.wsdl
+                  </wsdl>
+                  <bindingFiles>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-WS-API-A-BindingsMTOM.xml
+                    </bindingFile>
+                    <bindingFile>${basedir}/../resources/wsdl/bindings/JAX-B-BindingsMTOM.xml
+                    </bindingFile>
                   </bindingFiles>
                 </wsdlOption>
 
