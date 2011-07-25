@@ -315,7 +315,7 @@
       <filtered>true</filtered>
     </fileSet>
 
-    <!-- Common entries -->
+    <!-- axis Common entries 
     <fileSet>
       <directory>../fcrepo-common/target/generated-sources/axistools/wsdl2java/org/fcrepo/server/management
       </directory>
@@ -326,7 +326,7 @@
         <include>undeploy.wsdd</include>
       </includes>
     </fileSet>
-
+-->
   </fileSets>
 
   <!-- A few files that needed to be renamed -->
@@ -338,7 +338,7 @@
       <outputDirectory>/server/config</outputDirectory>
       <destName>beSecurity.xml</destName>
     </file>
-
+<!-- axis
     <file>
       <source>../fcrepo-common/target/generated-sources/axistools/wsdl2java/org/fcrepo/server/access/deploy.wsdd
       </source>
@@ -353,7 +353,7 @@
       </outputDirectory>
       <destName>undeployAPI-A.wsdd</destName>
     </file>
-
+ -->
   </files>
 
   <dependencySets>
@@ -376,7 +376,7 @@
         <include>javax.xml:jaxrpc-api:jar:*</include>
         <include>com.sun.woodstock.dependlibs:jhbasic:jar:*</include>
         <include>javax.xml.soap:saaj-api:jar:*</include>
-        <include>org.fcrepo:axis:jar:*</include>
+  <!-- axis <include>org.fcrepo:axis:jar:*</include> -->
         <include>org.fcrepo:jai_codec:jar:*</include>
         <include>org.fcrepo:jai_core:jar:*</include>
         <include>org.fcrepo:mulgara-core:jar:*</include>

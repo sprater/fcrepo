@@ -13,7 +13,7 @@
   <name>All Fedora Clients</name>
 
   <modules>
-    <module>fcrepo-client-admin</module>
+    <!-- <module>fcrepo-client-admin</module> -->
     <module>fcrepo-client-messaging</module>
   </modules>
 </project>

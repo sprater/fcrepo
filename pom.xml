@@ -101,7 +101,7 @@
     <module>fcrepo-common</module>
     <module>fcrepo-server</module>
     <module>fcrepo-client</module>
-    <!-- <module>fcrepo-integrationtest</module> -->
+   <!-- <module>fcrepo-integrationtest</module> -->
     <module>fcrepo-installer</module>
     <module>fcrepo-security</module>
     <module>fcrepo-webapp</module>
@@ -325,6 +325,7 @@
         <version>1.2</version>
         <classifier>melcoe</classifier>
       </dependency>
+      <!--
       <dependency>
         <groupId>org.fcrepo</groupId>
         <artifactId>axis</artifactId>
@@ -340,6 +341,7 @@
           </exclusion>
         </exclusions>
       </dependency>
+      -->
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
