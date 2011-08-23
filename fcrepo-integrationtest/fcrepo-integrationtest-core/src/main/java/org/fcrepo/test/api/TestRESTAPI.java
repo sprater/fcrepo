@@ -28,8 +28,6 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.axis.types.NonNegativeInteger;
-
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
@@ -876,7 +874,7 @@ public class TestRESTAPI
 
     public void testValidate() throws Exception {
         String[] resultFields = {"pid"};
-        NonNegativeInteger maxResults = new NonNegativeInteger("" + 1000);
+        java.math.BigInteger maxResults = new java.math.BigInteger("" + 1000);
         FieldSearchQuery query = new FieldSearchQuery(null, "*");
         FieldSearchResult result =
                 apia.findObjects(resultFields, maxResults, query);
