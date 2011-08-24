@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -74,13 +75,15 @@ import org.fcrepo.common.Constants;
 import org.fcrepo.common.Models;
 import org.fcrepo.common.PID;
 
-import org.fcrepo.server.access.FedoraAPIA;
-import org.fcrepo.server.management.FedoraAPIM;
-import org.fcrepo.server.types.gen.Datastream;
-import org.fcrepo.server.types.gen.FieldSearchQuery;
-import org.fcrepo.server.types.gen.FieldSearchResult;
-import org.fcrepo.server.types.gen.MIMETypedStream;
-import org.fcrepo.server.types.gen.ObjectFields;
+import org.fcrepo.server.access.FedoraAPIAMTOM;
+import org.fcrepo.server.management.FedoraAPIMMTOM;
+import org.fcrepo.server.types.mtom.gen.Datastream;
+import org.fcrepo.server.types.mtom.gen.FieldSearchQuery;
+import org.fcrepo.server.types.mtom.gen.FieldSearchResult;
+import org.fcrepo.server.types.mtom.gen.MIMETypedStream;
+import org.fcrepo.server.types.mtom.gen.ObjectFactory;
+import org.fcrepo.server.types.mtom.gen.ObjectFields;
+import org.fcrepo.server.utilities.TypeUtility;
 
 import org.fcrepo.test.DemoObjectTestSetup;
 import org.fcrepo.test.FedoraServerTestCase;
@@ -105,9 +108,9 @@ import static org.apache.commons.httpclient.HttpStatus.SC_UNAUTHORIZED;
 public class TestRESTAPI
         extends FedoraServerTestCase {
 
-    private FedoraAPIA apia;
+    private FedoraAPIAMTOM apia;
 
-    private FedoraAPIM apim;
+    private FedoraAPIMMTOM apim;
 
     // used for determining test configuration
     private static String authAccessProperty = "fedora.authorize.access";
@@ -207,7 +210,7 @@ public class TestRESTAPI
         DEMO_REST = tpl.toString();
         apia = getFedoraClient().getAPIA();
         apim = getFedoraClient().getAPIM();
-        apim.ingest(DEMO_REST.getBytes("UTF-8"),
+        apim.ingest(TypeUtility.convertBytesToDataHandler(DEMO_REST.getBytes("UTF-8")),
                     FOXML1_1.uri,
                     "ingesting new foxml object");
 
@@ -875,14 +878,16 @@ public class TestRESTAPI
     public void testValidate() throws Exception {
         String[] resultFields = {"pid"};
         java.math.BigInteger maxResults = new java.math.BigInteger("" + 1000);
-        FieldSearchQuery query = new FieldSearchQuery(null, "*");
+        FieldSearchQuery query = new FieldSearchQuery();
+        ObjectFactory factory = new ObjectFactory();
+        query.setTerms(factory.createFieldSearchQueryTerms("*"));
         FieldSearchResult result =
-                apia.findObjects(resultFields, maxResults, query);
+                apia.findObjects(TypeUtility.convertStringtoAOS(resultFields), maxResults, query);
 
-        ObjectFields[] fields = result.getResultList();
+        List<ObjectFields> fields = result.getResultList().getObjectFields();
         String pid = "";
         for (ObjectFields objectFields : fields) {
-            pid = objectFields.getPid();
+            pid = objectFields.getPid().getValue();
             url =
                     String.format("/objects/%s/validate", URLEncoder
                             .encode(pid.toString(), "UTF-8"));
@@ -1034,13 +1039,13 @@ public class TestRESTAPI
                      apim.getDatastream(pid.toString(), "EXTDS", null)
                              .getLocation());
         String dcDS =
-                new String(apia.getDatastreamDissemination(pid.toString(),
+                new String(TypeUtility.convertDataHandlerToBytes(apia.getDatastreamDissemination(pid.toString(),
                                                            "DC",
-                                                           null).getStream());
+                                                           null).getStream()));
         String extDS =
-                new String(apia.getDatastreamDissemination(pid.toString(),
+                new String(TypeUtility.convertDataHandlerToBytes(apia.getDatastreamDissemination(pid.toString(),
                                                            "EXTDS",
-                                                           null).getStream());
+                                                           null).getStream()));
         assertEquals(dcDS, extDS);
 
         // Update DS1 by reference (X type datastream)
@@ -1074,7 +1079,7 @@ public class TestRESTAPI
 
         MIMETypedStream ds1 =
                 apia.getDatastreamDissemination(pid.toString(), "DS1", null);
-        assertXMLEqual(xmlData, new String(ds1.getStream(), "UTF-8"));
+        assertXMLEqual(xmlData, new String(TypeUtility.convertDataHandlerToBytes(ds1.getStream()), "UTF-8"));
     }
 
     public void testModifyDatastreamNoContent() throws Exception {
@@ -1760,13 +1765,16 @@ public class TestRESTAPI
             m_errors = errors;
         }
 
+        @Override
         public void warning(SAXParseException e) throws SAXException {
         }
 
+        @Override
         public void error(SAXParseException e) throws SAXException {
             m_errors.append(e.getMessage());
         }
 
+        @Override
         public void fatalError(SAXParseException e) throws SAXException {
             m_errors.append(e.getMessage());
         }

@@ -100,7 +100,7 @@
     <module>fcrepo-common</module>
     <module>fcrepo-server</module>
     <module>fcrepo-client</module>
-   <!-- <module>fcrepo-integrationtest</module> -->
+    <module>fcrepo-integrationtest</module>
     <module>fcrepo-installer</module>
     <module>fcrepo-security</module>
     <module>fcrepo-webapp</module>
@@ -121,7 +121,7 @@
     <derby.version>10.7.1.1</derby.version>
     <jersey.version>1.0.3.1</jersey.version>
     <spring.version>3.0.5.RELEASE</spring.version>
-    <cxf.version>2.4.0</cxf.version>
+    <cxf.version>2.4.2</cxf.version>
   </properties>
 
   <dependencyManagement>
