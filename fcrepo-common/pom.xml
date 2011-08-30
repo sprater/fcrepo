@@ -26,7 +26,7 @@
           </includes>
         </configuration>
       </plugin>
-
+<!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
@@ -55,7 +55,7 @@
             </fileset>
           </filesets>
         </configuration>
-      </plugin>
+      </plugin> -->
       <plugin>
         <groupId>org.apache.cxf</groupId>
         <artifactId>cxf-codegen-plugin</artifactId>
