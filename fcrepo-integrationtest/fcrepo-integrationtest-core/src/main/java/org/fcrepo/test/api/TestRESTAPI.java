@@ -171,31 +171,30 @@ public class TestRESTAPI
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    private static final String datetime =
-            df.format(new Date());
+    private static final String datetime = df.format(new Date());
 
     private boolean chunked = false;
 
     @Override
     public void setUp() throws Exception {
         Map<String, String> nsMap = new HashMap<String, String>();
-        nsMap.put("management", "http://www.fedora.info/definitions/1/0/management/");
+        nsMap.put("management",
+                  "http://www.fedora.info/definitions/1/0/management/");
         nsMap.put("access", "http://www.fedora.info/definitions/1/0/access/");
         NamespaceContext ctx = new SimpleNamespaceContext(nsMap);
         XMLUnit.setXpathNamespaceContext(ctx);
 
-
         DEMO_MIN =
                 FileUtils.readFileToString(new File(REST_RESOURCE_PATH
-                                                    + "/demo_min.xml"), "UTF-8");
+                        + "/demo_min.xml"), "UTF-8");
         DEMO_MIN_PID =
                 FileUtils.readFileToString(new File(REST_RESOURCE_PATH
-                                                    + "/demo_min_pid.xml"), "UTF-8");
+                        + "/demo_min_pid.xml"), "UTF-8");
 
         StringTemplate tpl =
-                new StringTemplate(FileUtils
-                                           .readFileToString(new File(REST_RESOURCE_PATH
-                                                                      + "/demo_rest.xml"), "UTF-8"));
+                new StringTemplate(FileUtils.readFileToString(new File(REST_RESOURCE_PATH
+                                                                      + "/demo_rest.xml"),
+                                                              "UTF-8"));
         tpl.setAttribute("MODEL_DOWNLOAD_FILENAME",
                          MODEL.DOWNLOAD_FILENAME.localName);
         tpl.setAttribute("DS1_RELS_FILENAME", DS1RelsFilename);
@@ -210,9 +209,8 @@ public class TestRESTAPI
         DEMO_REST = tpl.toString();
         apia = getFedoraClient().getAPIA();
         apim = getFedoraClient().getAPIM();
-        apim.ingest(TypeUtility.convertBytesToDataHandler(DEMO_REST.getBytes("UTF-8")),
-                    FOXML1_1.uri,
-                    "ingesting new foxml object");
+        apim.ingest(TypeUtility.convertBytesToDataHandler(DEMO_REST
+                .getBytes("UTF-8")), FOXML1_1.uri, "ingesting new foxml object");
 
     }
 
@@ -223,9 +221,9 @@ public class TestRESTAPI
         apim.purgeObject(pid.toString(), "", false);
     }
 
-
     /**
      * Do Access requests require auth based on current test configuration?
+     *
      * @return true if auth is required for API-requests
      */
     private boolean getAuthAccess() {
@@ -237,10 +235,10 @@ public class TestRESTAPI
                 authorizeAccess = false;
             } else {
                 assertTrue("Failed to determine whether to perform authorization on Access requests from: "
-                           + authAccessProperty,
+                                   + authAccessProperty,
                            false);
                 throw new RuntimeException("Failed to determine whether to perform authorization on Access requests from: "
-                                           + authAccessProperty);
+                        + authAccessProperty);
             }
 
         }
@@ -429,7 +427,7 @@ public class TestRESTAPI
     public void testGETMethodCustomGoodUserArgGoodDate() throws Exception {
         url =
                 "/objects/demo:29/methods/demo:27/resizeImage?width=50&asOfDateTime="
-                + datetime;
+                        + datetime;
         if (this.getAuthAccess()) {
             assertEquals(SC_UNAUTHORIZED, get(false).getStatusCode());
         }
@@ -463,7 +461,7 @@ public class TestRESTAPI
     public void testGETMethodCustomGoodDate() throws Exception {
         url =
                 "/objects/demo:14/methods/demo:12/getDocumentStyle1?asOfDateTime="
-                + datetime;
+                        + datetime;
         if (this.getAuthAccess()) {
             assertEquals(SC_UNAUTHORIZED, get(false).getStatusCode());
         }
@@ -600,7 +598,7 @@ public class TestRESTAPI
                         + "/datastreamHistory.xml"), "UTF-8");
         StringTemplate tpl = new StringTemplate(control);
         tpl.setAttribute("FEDORA_BASE_URL", getProtocol() + "://" + getHost()
-                                            + ":" + getPort());
+                + ":" + getPort());
 
         // Diff must be identical
         XMLUnit.setIgnoreWhitespace(true);
@@ -796,7 +794,7 @@ public class TestRESTAPI
         Header locationHeader = response.getResponseHeader("location");
         assertNotNull(locationHeader);
         assertTrue(locationHeader.getValue().contains(URLEncoder.encode(pid
-                                                                                .toString(), "UTF-8")));
+                .toString(), "UTF-8")));
         responseBody = new String(response.getResponseBody(), "UTF-8");
         assertTrue(responseBody.equals(pid.toString()));
 
@@ -882,26 +880,33 @@ public class TestRESTAPI
         ObjectFactory factory = new ObjectFactory();
         query.setTerms(factory.createFieldSearchQueryTerms("*"));
         FieldSearchResult result =
-                apia.findObjects(TypeUtility.convertStringtoAOS(resultFields), maxResults, query);
+                apia.findObjects(TypeUtility.convertStringtoAOS(resultFields),
+                                 maxResults,
+                                 query);
 
         List<ObjectFields> fields = result.getResultList().getObjectFields();
         String pid = "";
         for (ObjectFields objectFields : fields) {
-            pid = objectFields.getPid().getValue();
-            url =
-                    String.format("/objects/%s/validate", URLEncoder
-                            .encode(pid.toString(), "UTF-8"));
-            HttpResponse getTrue = get(true);
-            assertEquals(pid.toString(), SC_UNAUTHORIZED, get(false)
-                    .getStatusCode());
-            assertEquals(pid.toString(), SC_OK, getTrue.getStatusCode());
-            String responseXML = getTrue.getResponseBodyString();
-            assertXpathExists("/management:validation[@valid='true']", responseXML);
+            if (objectFields != null) {
+                pid = objectFields.getPid() != null ? objectFields.getPid().getValue() : "";
+                url =
+                        String.format("/objects/%s/validate", URLEncoder
+                                .encode(pid.toString(), "UTF-8"));
+                HttpResponse getTrue = get(true);
+                assertEquals(pid.toString(), SC_UNAUTHORIZED, get(false)
+                        .getStatusCode());
+                assertEquals(pid.toString(), SC_OK, getTrue.getStatusCode());
+                String responseXML = getTrue.getResponseBodyString();
+                assertXpathExists("/management:validation[@valid='true']",
+                                  responseXML);
+            }
         }
         // test with asOfDateTime set (just on the last object validated above)
 
         url =
-                String.format("/objects/%s/validate?asOfDateTime=%s", pid.toString(),datetime);
+                String.format("/objects/%s/validate?asOfDateTime=%s",
+                              pid.toString(),
+                              datetime);
         HttpResponse getTrue = get(true);
         assertEquals(pid.toString(), SC_UNAUTHORIZED, get(false)
                 .getStatusCode());
@@ -1027,7 +1032,7 @@ public class TestRESTAPI
         // Update the location of the EXTDS datastream (E type datastream)
         String newLocation =
                 "http://" + getHost() + ":" + getPort() + "/"
-                + getFedoraAppServerContext() + "/get/demo:REST/DC";
+                        + getFedoraAppServerContext() + "/get/demo:REST/DC";
         url =
                 String.format("/objects/%s/datastreams/EXTDS?dsLocation=%s",
                               pid.toString(),
@@ -1039,13 +1044,14 @@ public class TestRESTAPI
                      apim.getDatastream(pid.toString(), "EXTDS", null)
                              .getLocation());
         String dcDS =
-                new String(TypeUtility.convertDataHandlerToBytes(apia.getDatastreamDissemination(pid.toString(),
-                                                           "DC",
-                                                           null).getStream()));
+                new String(TypeUtility.convertDataHandlerToBytes(apia
+                        .getDatastreamDissemination(pid.toString(), "DC", null)
+                        .getStream()));
         String extDS =
-                new String(TypeUtility.convertDataHandlerToBytes(apia.getDatastreamDissemination(pid.toString(),
-                                                           "EXTDS",
-                                                           null).getStream()));
+                new String(TypeUtility.convertDataHandlerToBytes(apia
+                        .getDatastreamDissemination(pid.toString(),
+                                                    "EXTDS",
+                                                    null).getStream()));
         assertEquals(dcDS, extDS);
 
         // Update DS1 by reference (X type datastream)
@@ -1079,7 +1085,9 @@ public class TestRESTAPI
 
         MIMETypedStream ds1 =
                 apia.getDatastreamDissemination(pid.toString(), "DS1", null);
-        assertXMLEqual(xmlData, new String(TypeUtility.convertDataHandlerToBytes(ds1.getStream()), "UTF-8"));
+        assertXMLEqual(xmlData,
+                       new String(TypeUtility.convertDataHandlerToBytes(ds1
+                               .getStream()), "UTF-8"));
     }
 
     public void testModifyDatastreamNoContent() throws Exception {
@@ -1259,21 +1267,21 @@ public class TestRESTAPI
         HttpResponse response = get(getAuthAccess());
         assertEquals(SC_OK, response.getStatusCode());
         CheckCDHeader(response, "attachment", TestRESTAPI.DS2LabelFilename
-                                              + ".jpg"); // jpg should be from MIMETYPE mapping
+                + ".jpg"); // jpg should be from MIMETYPE mapping
 
         // filename from label, unknown MIMETYPE
         url = "/objects/demo:REST/datastreams/DS3/content?download=true";
         response = get(getAuthAccess());
         assertEquals(SC_OK, response.getStatusCode());
         CheckCDHeader(response, "attachment", TestRESTAPI.DS3LabelFilename
-                                              + ".bin"); // default extension from config
+                + ".bin"); // default extension from config
 
         // filename from label with illegal characters, known MIMETYPE
         url = "/objects/demo:REST/datastreams/DS4/content?download=true";
         response = get(getAuthAccess(), false);
         assertEquals(SC_OK, response.getStatusCode());
         CheckCDHeader(response, "attachment", TestRESTAPI.DS4LabelFilename
-                                              + ".xml"); // xml from mimetype mapping
+                + ".xml"); // xml from mimetype mapping
     }
 
     @Test
@@ -1311,7 +1319,8 @@ public class TestRESTAPI
 
         // Test content not supplied
         PostMethod post = new PostMethod(url);
-        MultipartRequestEntity entity = new MultipartRequestEntity(new Part[] {}, post.getParams());
+        MultipartRequestEntity entity =
+                new MultipartRequestEntity(new Part[] {}, post.getParams());
 
         post.setRequestEntity(entity);
         getClient(true).executeMethod(post);
@@ -1331,16 +1340,18 @@ public class TestRESTAPI
         String o = Models.FEDORA_OBJECT_CURRENT.uri;
 
         // get all CModel relationships
-        url = "/objects/" + pid + "/relationships" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8");
+        url =
+                "/objects/" + pid + "/relationships" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8");
         HttpResponse response = get(true, false);
         assertEquals(SC_OK, response.getStatusCode());
 
         // check Fedora object CModel found
-       checkRelationship(response.getResponseBody(), s, p, o, true);
+        checkRelationship(response.getResponseBody(), s, p, o, true);
 
     }
+
     @Test
     public void testAddRelationship() throws Exception {
         String s = "info:fedora/" + pid;
@@ -1348,34 +1359,32 @@ public class TestRESTAPI
         String o = "foo";
         // check relationship not present
         url =
-            "/objects/" + pid + "/relationships" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8");
+                "/objects/" + pid + "/relationships" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8");
         HttpResponse response = get(true, false);
         assertEquals(SC_OK, response.getStatusCode());
         checkRelationship(response.getResponseBody(), s, p, o, false);
 
         // add relationship
         url =
-            "/objects/" + pid + "/relationships/new" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8") +
-            "&object=" + URLEncoder.encode(o, "UTF-8") +
-            "&isLiteral=true";
+                "/objects/" + pid + "/relationships/new" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8") + "&object="
+                        + URLEncoder.encode(o, "UTF-8") + "&isLiteral=true";
         response = putOrPost("POST", null, true);
         assertEquals(SC_OK, response.getStatusCode());
 
         // check relationship present
-        url =
-            "/objects/" + pid + "/relationships";// +
-            //"?subject=" + URLEncoder.encode(s, "UTF-8") +
-            //"&predicate=" + URLEncoder.encode(p, "UTF-8");
+        url = "/objects/" + pid + "/relationships";// +
+        //"?subject=" + URLEncoder.encode(s, "UTF-8") +
+        //"&predicate=" + URLEncoder.encode(p, "UTF-8");
         response = get(true, false);
         assertEquals(SC_OK, response.getStatusCode());
         checkRelationship(response.getResponseBody(), s, p, o, true);
 
-
     }
+
     @Test
     public void testPurgeRelationship() throws Exception {
         String s = "info:fedora/" + pid;
@@ -1384,56 +1393,56 @@ public class TestRESTAPI
 
         // add relationship
         url =
-            "/objects/" + pid + "/relationships/new" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8") +
-            "&object=" + URLEncoder.encode(o, "UTF-8") +
-            "&isLiteral=true";
+                "/objects/" + pid + "/relationships/new" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8") + "&object="
+                        + URLEncoder.encode(o, "UTF-8") + "&isLiteral=true";
         HttpResponse response = putOrPost("POST", null, true);
         assertEquals(SC_OK, response.getStatusCode());
 
         // check present
         url =
-            "/objects/" + pid + "/relationships" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8");
+                "/objects/" + pid + "/relationships" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8");
         response = get(true, false);
         assertEquals(SC_OK, response.getStatusCode());
         checkRelationship(response.getResponseBody(), s, p, o, true);
 
         // purge it
         url =
-            "/objects/" + pid + "/relationships" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8") +
-            "&object=" + URLEncoder.encode(o, "UTF-8") +
-            "&isLiteral=true";
+                "/objects/" + pid + "/relationships" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8") + "&object="
+                        + URLEncoder.encode(o, "UTF-8") + "&isLiteral=true";
         response = delete(true);
         assertEquals(SC_OK, response.getStatusCode());
-        assertEquals("Purge relationship", "true", response.getResponseBodyString());
+        assertEquals("Purge relationship",
+                     "true",
+                     response.getResponseBodyString());
 
         // check not present
         url =
-            "/objects/" + pid + "/relationships" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8");
+                "/objects/" + pid + "/relationships" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8");
         response = get(true, false);
         assertEquals(SC_OK, response.getStatusCode());
         checkRelationship(response.getResponseBody(), s, p, o, false);
 
         // purge again
         url =
-            "/objects/" + pid + "/relationships" +
-            "?subject=" + URLEncoder.encode(s, "UTF-8") +
-            "&predicate=" + URLEncoder.encode(p, "UTF-8") +
-            "&object=" + URLEncoder.encode(o, "UTF-8") +
-            "&isLiteral=true";
+                "/objects/" + pid + "/relationships" + "?subject="
+                        + URLEncoder.encode(s, "UTF-8") + "&predicate="
+                        + URLEncoder.encode(p, "UTF-8") + "&object="
+                        + URLEncoder.encode(o, "UTF-8") + "&isLiteral=true";
         response = delete(true);
         assertEquals(SC_OK, response.getStatusCode());
-        assertEquals("Purge relationship", "false", response.getResponseBodyString());
+        assertEquals("Purge relationship",
+                     "false",
+                     response.getResponseBodyString());
 
     }
-
 
     private HttpResponse _doUploadPost(String path) throws Exception {
         PostMethod post = new PostMethod(path);
@@ -1462,7 +1471,7 @@ public class TestRESTAPI
             }
         }
         assertEquals(expectedType + "; " + "filename=\"" + expectedFilename
-                     + "\"", contentDisposition);
+                + "\"", contentDisposition);
     }
 
     // helper methods
@@ -1490,11 +1499,9 @@ public class TestRESTAPI
 
     /**
      * Issues an HTTP GET for the specified URL, schema-validate the response
-     * (if it is XML)
+     * (if it is XML) If the response is intentionally XML with no schema, then
+     * use get(authenticate, false) then the response won't be validated.
      *
-     * If the response is intentionally XML with no schema, then use
-     * get(authenticate, false)
-     * then the response won't be validated.
      * @param authenticate
      * @return
      * @throws Exception
@@ -1504,21 +1511,22 @@ public class TestRESTAPI
     }
 
     /**
-     * Issues an HTTP GET for the specified URL.  Optionally validate the response
-     * (if the response is XML)
+     * Issues an HTTP GET for the specified URL. Optionally validate the
+     * response (if the response is XML)
      *
      * @param authenticate
-     * @param validate - validate the response against its schema
+     * @param validate
+     *        - validate the response against its schema
      * @return HttpResponse
      * @throws Exception
      */
-    protected HttpResponse get(boolean authenticate, boolean validate) throws Exception {
+    protected HttpResponse get(boolean authenticate, boolean validate)
+            throws Exception {
         HttpResponse res = getOrDelete("GET", authenticate);
 
         if (validate) {
             validateResponse(res);
         }
-
 
         return res;
     }
@@ -1528,9 +1536,11 @@ public class TestRESTAPI
         if (res.getStatusCode() >= 200 && res.getStatusCode() <= 299) {
             // if response is xml
 
-            if (res.getResponseHeader("Content-Type") != null &&
-                (res.getResponseHeader("Content-Type").getValue().contains("text/xml") ||
-                 res.getResponseHeader("Content-Type").getValue().contains("application/xml"))) {
+            if (res.getResponseHeader("Content-Type") != null
+                    && (res.getResponseHeader("Content-Type").getValue()
+                            .contains("text/xml") || res
+                            .getResponseHeader("Content-Type").getValue()
+                            .contains("application/xml"))) {
                 String xmlResponse = res.getResponseBodyString();
                 // if a schema location is specified
                 if (xmlResponse.contains(":schemaLocation=\"")) {
@@ -1573,8 +1583,9 @@ public class TestRESTAPI
         return post(requestContent, authenticate, true);
     }
 
-    protected HttpResponse post(String requestContent, boolean authenticate, boolean validate)
-            throws Exception {
+    protected HttpResponse post(String requestContent,
+                                boolean authenticate,
+                                boolean validate) throws Exception {
         HttpResponse res = putOrPost("POST", requestContent, authenticate);
         if (validate) {
             validateResponse(res);
@@ -1695,15 +1706,18 @@ public class TestRESTAPI
         }
     }
 
-    private void checkRelationship(byte[] rdf, String s, String p, String o, boolean exists) throws TrippiException, UnsupportedEncodingException {
+    private void checkRelationship(byte[] rdf,
+                                   String s,
+                                   String p,
+                                   String o,
+                                   boolean exists) throws TrippiException,
+            UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         sb.append("RDF: " + new String(rdf, "UTF-8"));
-        TripleIterator it = TripleIterator.fromStream(
-                                                      new ByteArrayInputStream(rdf),
-                                                      null,
+        TripleIterator it =
+                TripleIterator.fromStream(new ByteArrayInputStream(rdf), null,
 
-                                                      RDFFormat.RDF_XML);
-
+                RDFFormat.RDF_XML);
 
         boolean found = false;
         while (it.hasNext()) {
@@ -1713,25 +1727,30 @@ public class TestRESTAPI
             sb.append(t.getPredicate().stringValue() + ", ");
             sb.append(t.getObject().stringValue() + "\n");
 
+            sb.append("matching: " + s + " " + t.getSubject().stringValue()
+                    + " " + (s.equals(t.getSubject().stringValue())) + "\n");
+            sb.append("matching: " + p + " " + t.getPredicate().stringValue()
+                    + " " + (p.equals(t.getPredicate().stringValue())) + "\n");
+            sb.append("matching: " + o + " " + t.getObject().stringValue()
+                    + " " + (o.equals(t.getObject().stringValue())) + "\n");
 
-            sb.append("matching: " + s + " " + t.getSubject().stringValue() + " " + (s.equals(t.getSubject().stringValue())) + "\n") ;
-            sb.append("matching: " + p + " " + t.getPredicate().stringValue() + " " + (p.equals(t.getPredicate().stringValue())) + "\n");
-            sb.append("matching: " + o + " " + t.getObject().stringValue() + " " + (o.equals(t.getObject().stringValue())) + "\n");
-
-            if (s.equals(t.getSubject().stringValue()) &&
-                    p.equals(t.getPredicate().stringValue()) &&
-                    o.equals(t.getObject().stringValue())) {
+            if (s.equals(t.getSubject().stringValue())
+                    && p.equals(t.getPredicate().stringValue())
+                    && o.equals(t.getObject().stringValue())) {
                 sb.append("Matched\n");
                 found = true;
             }
         }
 
-        assertTrue("Testing if relationship present: " + exists + " [ " + s + ", " + p + ", " + o + " ] \n " + sb.toString(), exists == found);
+        assertTrue("Testing if relationship present: " + exists + " [ " + s
+                           + ", " + p + ", " + o + " ] \n " + sb.toString(),
+                   exists == found);
     }
 
     /**
-     * Validate XML document supplied as a string.
-     * Validates against XML schema specified as schemaLocation in document
+     * Validate XML document supplied as a string. Validates against XML schema
+     * specified as schemaLocation in document
+     *
      * @param xml
      * @throws Exception
      */
@@ -1752,15 +1771,19 @@ public class TestRESTAPI
         reader.setErrorHandler(new ValidatorErrorHandler(errors));
         reader.parse(new InputSource(new StringReader(xml)));
 
-        assertTrue("Validation failed for " + url + ". Errors: " + errors.toString(), 0 == errors.length());
+        assertTrue("Validation failed for " + url + ". Errors: "
+                           + errors.toString(),
+                   0 == errors.length());
 
     }
 
     // error handler for validating parsing (see validate(String))
     // collects errors and fatal errors in a stringBuilder
-    class ValidatorErrorHandler implements ErrorHandler {
+    class ValidatorErrorHandler
+            implements ErrorHandler {
 
         private final StringBuilder m_errors;
+
         ValidatorErrorHandler(StringBuilder errors) {
             m_errors = errors;
         }
