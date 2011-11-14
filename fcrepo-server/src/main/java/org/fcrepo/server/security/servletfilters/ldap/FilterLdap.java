@@ -37,31 +37,44 @@ import org.slf4j.LoggerFactory;
 public class FilterLdap
         extends BaseCaching {
 
+	@Deprecated
     public static final String CONTEXT_VERSION_KEY = "java.naming.ldap.version";
 
+	@Deprecated
     public static final String VERSION_KEY = "version";
 
+	@Deprecated
     public static final String BIND_FILTER_KEY = "bind-filter";
 
+	@Deprecated
     public static final String URL_KEY = "url";
 
+	@Deprecated
     public static final String BASE_KEY = "search-base";
 
+	@Deprecated
     public static final String FILTER_KEY = "search-filter";
 
+	@Deprecated
     public static final String USERID_KEY = "id-attribute";
 
+	@Deprecated
     public static final String PASSWORD_KEY = "password-attribute";
 
+	@Deprecated
     public static final String ATTRIBUTES2RETURN_KEY = "attributes";
 
+	@Deprecated
     public static final String GROUPS_NAME_KEY = "attributes-common-name";
 
+	@Deprecated
     public static final String SECURITY_AUTHENTICATION_KEY =
             "security-authentication";
 
+	@Deprecated
     public static final String SECURITY_PRINCIPAL_KEY = "security-principal";
 
+	@Deprecated
     public static final String SECURITY_CREDENTIALS_KEY =
             "security-credentials";
 
@@ -94,6 +107,7 @@ public class FilterLdap
 
     //public Boolean REQUIRE_RETURNED_ATTRS = Boolean.FALSE;
 
+	@Deprecated
     @Override
     public void init(FilterConfig filterConfig) {
         String m = "L init() ";
@@ -179,6 +193,7 @@ public class FilterLdap
         }
     }
 
+	@Deprecated
     @Override
     public void destroy() {
         String m = FilterSetup.getFilterNameAbbrev(FILTER_NAME) + " destroy() ";
@@ -750,6 +765,7 @@ public class FilterLdap
         return authenticated;
     }
 
+	@Deprecated
     @Override
     public void populateCacheElement(CacheElement cacheElement, String password) {
         //this is heavy on logging for field reporting
