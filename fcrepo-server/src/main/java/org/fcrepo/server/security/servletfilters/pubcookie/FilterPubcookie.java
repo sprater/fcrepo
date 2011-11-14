@@ -35,46 +35,56 @@ public class FilterPubcookie
     private static final Map NO_REQUEST_PARAMETERS = new HashMap();
 
     private static final Cookie[] NO_COOKIES = new Cookie[0];
-
+    
+    @Deprecated
     public static final String PUBCOOKIE_NAME_KEY = "pubcookie-name";
-
+    
+    @Deprecated
     public static final String PUBCOOKIE_LOGINPAGE_URL_KEY =
             "pubcookie-loginpage-url";
-
+    
+    @Deprecated   
     public static final String PUBCOOKIE_LOGINPAGE_FORM_NAME_KEY =
             "pubcookie-loginpage-form-name";
-
+    
+    @Deprecated
     public static final String PUBCOOKIE_LOGINPAGE_INPUT_NAME_USERID_KEY =
             "pubcookie-loginpage-input-name-userid";
-
+    
+    @Deprecated
     public static final String PUBCOOKIE_LOGINPAGE_INPUT_NAME_PASSWORD_KEY =
             "pubcookie-loginpage-input-name-password";
-
+    
+    @Deprecated
     public static final String TRUSTSTORE_LOCATION_KEY =
             "javax.net.ssl.trustStore";
-
+    
+    @Deprecated
     public static final String TRUSTSTORE_PASSWORD_KEY =
             "javax.net.ssl.trustStorePassword";
-
+    
+    @Deprecated
     public static final String KEYSTORE_LOCATION_KEY = "javax.net.ssl.keyStore";
-
+    
+    @Deprecated
     public static final String KEYSTORE_PASSWORD_KEY =
             "javax.net.ssl.keyStorePassword";
-
+    
     private String PUBCOOKIE_NAME = "";
-
+    
     private String PUBCOOKIE_LOGINPAGE_URL = "";
-
+    
     private String PUBCOOKIE_LOGINPAGE_FORM_NAME = "";
-
+    
     private String PUBCOOKIE_LOGINPAGE_INPUT_NAME_USERID = "";
-
+    
     private String PUBCOOKIE_LOGINPAGE_INPUT_NAME_PASSWORD = "";
-
+    
     private String TRUSTSTORE_LOCATION = null;
-
+    
     private String TRUSTSTORE_PASSWORD = null;
-
+    
+    @Deprecated
     @Override
     public void destroy() {
         String method = "destroy()";
@@ -212,7 +222,8 @@ public class FilterPubcookie
             logger.debug(exit(method));
         }
     }
-
+    
+    @Deprecated
     @Override
     public void populateCacheElement(CacheElement cacheElement, String password) {
         String method = "populateCacheElement()";

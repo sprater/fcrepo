@@ -1,7 +1,7 @@
 /* The contents of this file are subject to the license and copyright terms
  * detailed in the license directory at the root of the source tree (also
  * available online at http://fedora-commons.org/license/).
- */
+ */    
 package org.fcrepo.server.security.servletfilters.pubcookie;
 
 import java.io.ByteArrayInputStream;
@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Bill Niebel
  */
+@Deprecated
 public class ConnectPubcookie {
 
     private static final Logger logger =
@@ -45,15 +46,18 @@ public class ConnectPubcookie {
     private Cookie[] responseCookies = null;
 
     Header[] responseCookies2 = null;
-
+    
+    @Deprecated
     public final boolean completedFully() {
         return completedFully;
     }
-
+    
+    @Deprecated
     public final Node getResponseDocument() {
         return responseDocument;
     }
-
+    
+    @Deprecated
     public final Cookie[] getResponseCookies() {
         logger.debug(this.getClass().getName() + ".getResponseCookies() "
                 + "cookies are:");
@@ -94,7 +98,8 @@ public class ConnectPubcookie {
         }
         return method;
     }
-
+    
+    @Deprecated
     public final void connect(String urlString,
                               Map requestParameters,
                               Cookie[] requestCookies,
