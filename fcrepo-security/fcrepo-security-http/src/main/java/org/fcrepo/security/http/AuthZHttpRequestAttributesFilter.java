@@ -69,7 +69,7 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 		// this is the map we will actually store into the request attribute
 		Map<String, String[]> subjectAttributes = new HashMap<String, String[]>();
 
-		// we use two loops to populate shibattributes in case we have multiple
+		// we use two loops to populate attributes in case we have multiple
 		// homonymic headers in addition to multivalued headers
 		for (String name : names) {
 			Set<String> headervalues = new HashSet<String>();
