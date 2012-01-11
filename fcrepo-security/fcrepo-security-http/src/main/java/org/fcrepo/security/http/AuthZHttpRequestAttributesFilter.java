@@ -169,9 +169,7 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	}
 
 	/**
-	 * destroy called when filter is destroyed, doesn't do anything\
-	 * 
-	 * @return void
+	 * destroy called when filter is destroyed, does nothing
 	 */
 	public void destroy() {
 		if (logger.isDebugEnabled()) {
