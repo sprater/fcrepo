@@ -42,8 +42,7 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	/**
 	 * setNames set the list of attribute names to look for
 	 * 
-	 * @param names
-	 *            , a String containing space separated attribute names
+	 * @param names contains space separated attribute names
 	 * @return void
 	 */
 	public void setNames(String names) {
@@ -54,8 +53,7 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	 * setPrincipalHeader set the name of the Shibboleth header whgich contains
 	 * the principal's name
 	 * 
-	 * @param principalHeader
-	 *            , String containing name of header containing principal's name
+	 * @param principalHeader contains name of header containing principal's name
 	 * @return void
 	 */
 	public void setPrincipalHeader(String principalHeader) {
@@ -147,8 +145,7 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	/**
 	 * init initialise filter
 	 * 
-	 * @param config
-	 *            FilterConfig object, not used
+	 * @param config not used
 	 * @return void
 	 */
 	public void init(FilterConfig config) throws ServletException {
