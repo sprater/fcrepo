@@ -43,7 +43,6 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	 * setNames set the list of attribute names to look for
 	 * 
 	 * @param names contains space separated attribute names
-	 * @return void
 	 */
 	public void setNames(String names) {
 		this.names = new HashSet<String>(Arrays.asList(names.split(" ")));
@@ -54,7 +53,6 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	 * the principal's name
 	 * 
 	 * @param principalHeader contains name of header containing principal's name
-	 * @return void
 	 */
 	public void setPrincipalHeader(String principalHeader) {
 		this.principalHeader = principalHeader;
@@ -120,6 +118,11 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 		}
 	}
 
+	
+	/**
+	 * @param principalnames array of Strings containing possible names for the security Principal
+	 * @return whether or not the array contains exactly one name of more than 0 length
+	 */
 	private Boolean isValid(String[] principalnames) {
 		// no principal name found
 		if (0 == principalnames.length) {
@@ -135,7 +138,7 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 		}
 
 		// make sure that first principal name is not empty
-		if (null == principalnames[0] || 0 == principalnames[0].length()) {
+		if (principalnames[0] == null || principalnames[0].length() == 0) {
 			return false;
 		}
 		// we have a valid Principal name!
@@ -146,7 +149,6 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	 * init initialise filter
 	 * 
 	 * @param config not used
-	 * @return void
 	 */
 	public void init(FilterConfig config) throws ServletException {
 		this.init();
@@ -154,9 +156,6 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 
 	/**
 	 * init initialise filter
-	 * 
-	 * @param none
-	 * @return void
 	 */
 	public void init() throws ServletException // {{{
 	{
@@ -170,9 +169,8 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	}
 
 	/**
-	 * destroy called when filter is destroyed, doesn't do anything
+	 * destroy called when filter is destroyed, doesn't do anything\
 	 * 
-	 * @param none
 	 * @return void
 	 */
 	public void destroy() {
