@@ -29,6 +29,7 @@ public class UserPrincipal
         implements java.security.Principal, Serializable {
 
     private static final long serialVersionUID = 8558099162295005184L;
+    private static final String toStringFormat= "org.fcrepo.server.security.jaas.auth.Principal(%s)";
 
     private String name = null;
 
@@ -83,5 +84,10 @@ public class UserPrincipal
             return false;
         }
         return true;
+    }
+    
+    @Override
+    public String toString() {
+    			return String.format(toStringFormat, getName());
     }
 }
