@@ -114,6 +114,23 @@ public class AuthZHttpRequestAttributesFilterTest extends TestCase {
 				httprequest.getUserPrincipal());
 	}
 	
+	/* A request without a principal header should not be authenticated.. 
+	 */
+	@Test
+	public void testUnauthenticatedRequestIsNotAuthenticated() {
+		logger.info("Running testUnauthenticatedRequestIsNotAuthenticated");
+		try {
+			filter.doFilter(request, response, chain);
+		} catch (IOException e) {
+			logger.error("Unexpected IOException", e);
+		} catch (ServletException e) {
+			logger.error("Unexpected ServletException", e);
+		}
+		HttpServletRequest httprequest = (HttpServletRequest)chain.getRequest();
+		assertNull("Found authenticated principal!",
+				httprequest.getUserPrincipal());
+	}
+	
 	/*
 	 * A request with a principal header should pass authorization info through
 	 * in the Fedora-expected request attribute
