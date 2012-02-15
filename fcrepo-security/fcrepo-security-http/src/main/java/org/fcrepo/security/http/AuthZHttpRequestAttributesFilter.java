@@ -34,7 +34,7 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	private String principalHeader;
 
 	// attribute in which to store authN data
-	private static final String FEDORA_ATTRIBUTES_KEY = "FEDORA_AUX_SUBJECT_ATTRIBUTES";
+	static final String FEDORA_ATTRIBUTES_KEY = "FEDORA_AUX_SUBJECT_ATTRIBUTES";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(AuthZHttpRequestAttributesFilter.class);
@@ -42,7 +42,8 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	/**
 	 * setNames set the list of attribute names to look for
 	 * 
-	 * @param names contains space separated attribute names
+	 * @param names
+	 *            contains space separated attribute names
 	 */
 	public void setNames(String names) {
 		this.names = new HashSet<String>(Arrays.asList(names.split(" ")));
@@ -52,7 +53,8 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 	 * setPrincipalHeader set the name of the Shibboleth header whgich contains
 	 * the principal's name
 	 * 
-	 * @param principalHeader contains name of header containing principal's name
+	 * @param principalHeader
+	 *            contains name of header containing principal's name
 	 */
 	public void setPrincipalHeader(String principalHeader) {
 		this.principalHeader = principalHeader;
@@ -68,15 +70,13 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 		// we use two loops to populate attributes in case we have multiple
 		// homonymic headers in addition to multivalued headers
 		for (String name : names) {
+			logger.debug("Looking for header with name: {}", name);
 			Set<String> headervalues = new HashSet<String>();
 			for (Enumeration<String> retrievedheadervalues = req
 					.getHeaders(name); retrievedheadervalues.hasMoreElements();) {
+				logger.debug("Retrieved header with name: {}", name);
 				String value = retrievedheadervalues.nextElement();
-
-				if (logger.isDebugEnabled()) {
-					logger.debug("Now adding value: " + value + " to field "
-							+ name);
-				}
+				logger.debug("Now adding value: " + value + " to field " + name);
 
 				headervalues.add(value);
 			}
@@ -88,20 +88,17 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 
 		if (isValid(principalNames)) {
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("Trying to set principal to new Principal with name="
-						+ principalNames[0]);
-			}
+			logger.debug("Trying to set principal to new Principal with name="
+					+ principalNames[0]);
 
 			// get name of principal and inject it into request
 			// we use here a FeSL implementation of java.security.Principal
 			UserPrincipal principal = new UserPrincipal(principalNames[0]);
-			AuthHttpServletRequestWrapper authRequest = new AuthHttpServletRequestWrapper(req);
+			AuthHttpServletRequestWrapper authRequest = new AuthHttpServletRequestWrapper(
+					req);
 			authRequest.setUserPrincipal(principal);
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("Principal has been set to " + principal);
-			}
+			logger.debug("Principal has been set to " + principal);
 
 			// can inject other attributes
 			authRequest.setAttribute(FEDORA_ATTRIBUTES_KEY, subjectAttributes);
@@ -109,31 +106,42 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 				logger.debug("Added " + subjectAttributes + " to "
 						+ FEDORA_ATTRIBUTES_KEY);
 			}
-			chain.doFilter(authRequest, response);
+			if (chain != null)
+				chain.doFilter(authRequest, response);
 
 		} else {
 			// not authenticated, so just pass original request through
 			// to rest of chain
-			chain.doFilter(request, response);
+			if (chain != null)
+				chain.doFilter(request, response);
 		}
 	}
 
-	
 	/**
-	 * @param principalnames array of Strings containing possible names for the security Principal
-	 * @return whether or not the array contains exactly one name of more than 0 length
+	 * @param principalnames
+	 *            array of Strings containing possible names for the security
+	 *            Principal
+	 * @return whether or not the array contains exactly one name of more than 0
+	 *         length
 	 */
 	private Boolean isValid(String[] principalnames) {
+		logger.debug("Checking potential principal name.");
 		// no principal name found
+		if (principalnames == null) {
+			logger.debug("Principal name was null!");
+			return false;
+		}
+		// no principal name found, but there was some empty header
 		if (0 == principalnames.length) {
+			logger.debug("Principal name was an array of zero length!");
 			return false;
 		}
 
 		// more than one principal name found
 		if (principalnames.length > 1) {
 			logger.error(new Exception(
-					"More than one principal for authentication found in HTTP request!").toString()
-					);
+					"More than one principal for authentication found in HTTP request!")
+					.toString());
 			return false;
 		}
 
@@ -142,39 +150,41 @@ public class AuthZHttpRequestAttributesFilter implements Filter {
 			return false;
 		}
 		// we have a valid Principal name!
+		logger.debug("Principal name {} was valid!", principalnames[0]);
 		return true;
 	}
 
 	/**
 	 * init initialise filter
 	 * 
-	 * @param config not used
+	 * @param config
+	 *            not used
 	 */
+	@Override
 	public void init(FilterConfig config) throws ServletException {
 		this.init();
 	}
 
-	/**
-	 * init initialise filter
-	 */
 	public void init() throws ServletException // {{{
 	{
 		// add principal header to list of names to look for
 		names.add(principalHeader);
 
 		// log initialisation
-		if (logger.isInfoEnabled()) {
-			logger.info("Initializing AggregateHeadersFilter");
-		}
+		logger.info("Initializing {}", this.getClass().getName());
 	}
 
-	/**
-	 * destroy called when filter is destroyed, does nothing
-	 */
+	@Override
 	public void destroy() {
-		if (logger.isDebugEnabled()) {
-			logger.debug("AggregateHeadersFilter destroyed");
-		}
+		logger.info("Destroying {}", this.getClass().getName());
+	}
+
+	public Set<String> getNames() {
+		return names;
+	}
+
+	public String getPrincipalHeader() {
+		return principalHeader;
 	}
 
 }
